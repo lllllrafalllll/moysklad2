@@ -21,11 +21,13 @@
             </form> -->
 
             <!-- Форма добавления товара -->
+            {% if document.status != 'отгружен' %}
             <form action="/document/{{ doc_id }}/add_item" method="post" class="add-item-form" id="addItemForm">
                 <input type="text" name="skus" id="skus" placeholder="Штрих-код товара" required autofocus>
                 <button type="submit" class="btn btn-primary">Добавить</button>
                 <div id="error-message" class="text-danger mt-2" style="display: none;"></div>
             </form>
+            {% endif %}
 
             <!-- Кнопки скачивания -->
             <div class="download-buttons">
