@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Список документов{% endblock %}
+
+{% block additional_styles %}
+<link rel="stylesheet" href="{{ url_for('static', path='styles/documents.css') }}">
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block content %}
+<!-- Основной контейнер -->
+<div class="container documents-container">
+    <h1 class="page-title">Список документов</h1>
+
+    <!-- Кнопка создания нового документа -->
+    <div class="actions">
+        <form action="/create_document" method="post" class="create-document-form">
+            <button type="submit" class="btn btn-primary">Создать новый документ</button>
+        </form>
+    </div>
+
+    <!-- Таблица с документами -->
+    <div class="table-responsive">
+        <table class="documents-table">
+            <thead>
+                <tr>
+                    <th>Наименование документа</th>
+                    <th>Кабинет</th>
+                    <th>Склад отгрузки</th>
+                    <th>Дата создания</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                <tr>
+                    <td>Документ {{ document.id }}</td>
+                    <td>{{ document.shipping_office }}</td>
+                    <td>{{ document.shipping_warehouse }}</td>
+                    <td>{{ document.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ document.status }}</td>
+                    <td>
+                        <a href="/document/{{ document.id }}" class="btn btn-secondary btn-sm">Открыть</a>
+                        <!-- Дополнительные действия можно добавить здесь -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_scripts %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.documents-table').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/Russian.json"
+            },
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false
+        });
+    });
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,206 @@
+/* documents.css */
+
+/* Общие стили для страницы документов */
+.documents-container {
+    padding: 20px;
+    background-color: #2c2c2c; /* Тёмный фон для контейнера */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    color: #ecf0f1;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+/* Кнопки действий */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.create-document-form .btn-primary {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 24px; /* Увеличенный отступ */
+    border-radius: 5px;
+    font-size: 1em; /* Увеличенный размер шрифта */
+    font-weight: bold; /* Жирный шрифт для лучшей видимости */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.create-document-form .btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Таблица документов */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.documents-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 1em; /* Увеличенный размер шрифта */
+    color: #ecf0f1; /* Убедитесь, что цвет текста светлый для контраста */
+    line-height: 1.6; /* Увеличенный межстрочный интервал */
+}
+
+.documents-table thead {
+    background-color: #3e3e3e;
+    color: #ecf0f1;
+}
+
+.documents-table th, 
+.documents-table td {
+    padding: 16px 20px; /* Увеличенные отступы для лучшей читаемости */
+    text-align: center;
+    border-bottom: 1px solid #444;
+    font-weight: normal; /* Обычный вес шрифта для ячеек */
+}
+
+.documents-table th {
+    font-weight: bold; /* Жирный шрифт для заголовков */
+    font-size: 1.1em; /* Немного увеличенный размер шрифта для заголовков */
+}
+
+.documents-table tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.documents-table tbody tr:hover {
+    background-color: #3e3e3e;
+}
+
+.documents-table a.btn-secondary {
+    background-color: #7f8c8d;
+    color: #fff;
+    padding: 8px 12px; /* Увеличенные отступы для кнопок */
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em; /* Немного увеличенный размер шрифта */
+    font-weight: bold; /* Жирный шрифт для лучшей видимости */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.documents-table a.btn-secondary:hover {
+    background-color: #606c76;
+    transform: translateY(-2px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5em;
+    }
+
+    .documents-table th, 
+    .documents-table td {
+        padding: 10px 12px; /* Уменьшенные отступы на малых экранах */
+        font-size: 0.95em; /* Немного уменьшенный размер шрифта */
+    }
+
+    .create-document-form .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.95em;
+    }
+
+    .documents-table a.btn-secondary {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+}
+
+
+/* Стили для DataTables */
+.documents-table.dataTable thead th {
+    background-color: #3e3e3e;
+    color: #ecf0f1;
+    border-bottom: 2px solid #444;
+    font-size: 1.1em; /* Увеличенный размер шрифта для заголовков DataTables */
+}
+
+.documents-table.dataTable tbody tr {
+    background-color: #2c2c2c;
+    line-height: 1.6; /* Соответствует основному межстрочному интервалу */
+}
+
+.documents-table.dataTable tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.documents-table.dataTable tbody tr:hover {
+    background-color: #3e3e3e;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    background-color: #3e3e3e;
+    border: 1px solid #444;
+    color: #ecf0f1;
+    padding: 8px 12px; /* Увеличенные отступы для удобства ввода */
+    border-radius: 4px;
+    font-size: 1em; /* Увеличенный размер шрифта */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background-color: #7f8c8d;
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px; /* Увеличенные отступы для кнопок пагинации */
+    margin: 0 4px;
+    transition: background-color 0.3s;
+    font-size: 0.9em; /* Немного увеличенный размер шрифта */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #606c76;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_info {
+    color: #ecf0f1;
+    font-size: 1em; /* Увеличенный размер шрифта */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #3498db !important;
+    color: #fff !important;
+    font-weight: bold; /* Жирный шрифт для текущей страницы */
+}
+
+/* Дополнительные улучшения для читаемости */
+
+/* Увеличение ширины столбцов для длинных текстов */
+.documents-table th:nth-child(1),
+.documents-table td:nth-child(1) {
+    width: 20%; /* Увеличенная ширина для наименования документа */
+}
+
+.documents-table th:nth-child(6),
+.documents-table td:nth-child(6) {
+    width: 15%; /* Увеличенная ширина для действий */
+}
+
+/* Улучшение видимости текста */
+.documents-table th, .documents-table td {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Тень для лучшего контраста */
+}
+
+/* Добавление иконок для действий (опционально) */
+.documents-table a.btn-secondary i {
+    margin-right: 5px;
+}
+
+/* Общее улучшение типографики */
+.documents-table th, .documents-table td {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px; /* Немного увеличенное межбуквенное расстояние для лучшей читаемости */
+}

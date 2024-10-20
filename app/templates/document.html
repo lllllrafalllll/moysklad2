@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Документ {{ doc_id }}{% endblock %}
+
+{% block container_class %}
+    <div class="container-fluid">
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', path='styles/document.css') }}">
+
+<div class="row g-4">
+    <!-- Основной контент -->
+    <div class="col-lg-10">
+        <!-- Верхняя панель с действиями -->
+        <div class="top-actions">
+            <!-- Форма добавления товара -->
+            <!-- <form action="/document/{{ doc_id }}/add_item" method="post" class="add-item-form">
+                <input type="text" name="skus" id="skus" placeholder="Штрих-код товара" required autofocus>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </form> -->
+
+            <!-- Форма добавления товара -->
+            <form action="/document/{{ doc_id }}/add_item" method="post" class="add-item-form" id="addItemForm">
+                <input type="text" name="skus" id="skus" placeholder="Штрих-код товара" required autofocus>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+                <div id="error-message" class="text-danger mt-2" style="display: none;"></div>
+            </form>
+
+            <!-- Кнопки скачивания -->
+            <div class="download-buttons">
+                <form action="/document/{{ doc_id }}/download/csv" method="get" class="download-form">
+                    <button type="submit" class="btn btn-secondary">CSV</button>
+                </form>
+                <!-- <form action="/document/{{ doc_id }}/download/excel" method="get" class="download-form">
+                    <button type="submit" class="btn btn-secondary">Excel</button> -->
+                </form>
+            </div>
+
+            <!-- Компактные действия -->
+            <div class="actions compact">
+                <!-- <form action="/document/{{ doc_id }}/change_status" method="post" class="action-form">
+                    {% if document.status == 'в работе' %}
+                        <input type="hidden" name="new_status" value="отгружен">
+                        <button type="submit" class="btn btn-success">Отметить как отгружен</button>
+                    {% else %}
+                        <input type="hidden" name="new_status" value="в работе">
+                        <button type="submit" class="btn btn-warning">Вернуть в работу</button>
+                    {% endif %}
+                </form> -->
+
+                <div class="view-toggle">
+                    {% if view_mode == 'grouped' %}
+                        <a href="/document/{{ doc_id }}?view_mode=detailed" class="btn btn-primary">Детальный вид</a>
+                    {% else %}
+                        <a href="/document/{{ doc_id }}?view_mode=grouped" class="btn btn-primary">Сгруппированный вид</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица с товарами -->
+        <div class="items-table">
+            <h2>Товары в документе</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ШК</th>
+                            <th>Артикул</th>
+                            <th>Размер</th>
+                            <th>Номенклатура ID</th>
+                            <th>Предмет</th>
+                            <th>Длина</th>
+                            <th>Ширина</th>
+                            <th>Высота</th>
+                            <th>Кабинет</th>
+                            <th>Количество</th>
+                            {% if view_mode != 'grouped' and document.status != 'отгружен' %}
+                                <th>Изменить кол-во</th>
+                            {% endif %}
+                            <th>Номер коробки</th>
+                            {% if document.status != 'отгружен' %}
+                            <th>Действия</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if view_mode == 'grouped' %}
+                            {% for item in grouped_items %}
+                                <tr>
+                                    <td>{{ item.skus }}</td>
+                                    <td>{{ item.vendorcode }}</td>
+                                    <td>{{ item.techsize }}</td>
+                                    <td>{{ item.nmid }}</td>
+                                    <td>{{ item.subjectname }}</td>
+                                    <td>{{ item.length }}</td>
+                                    <td>{{ item.width }}</td>
+                                    <td>{{ item.height }}</td>
+                                    <td>{{ item.company }}</td>
+                                    <td>{{ item.total_quantity }}</td>
+                                    <td>{{ item.box_number or '' }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            {% for item in items %}
+                                <tr>
+                                    <td>{{ item.item.skus }}</td>
+                                    <td>{{ item.item.vendorcode }}</td>
+                                    <td>{{ item.item.techsize }}</td>
+                                    <td>{{ item.item.nmid }}</td>
+                                    <td>{{ item.item.subjectname }}</td>
+                                    <td>{{ item.item.length }}</td>
+                                    <td>{{ item.item.width }}</td>
+                                    <td>{{ item.item.height }}</td>
+                                    <td>{{ item.item.company }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    {% if view_mode != 'grouped' and document.status != 'отгружен' %}
+                                        <td>
+                                            <form action="/document/{{ doc_id }}/update_quantity" method="post" class="quantity-form">
+                                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" required class="form-control me-2">
+                                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                                <button type="submit" class="btn btn-primary btn-sm">Обновить</button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                    {% if document.status != 'отгружен' %}
+                                    <td>
+                                        <form action="/document/{{ doc_id }}/update_box_number" method="post" class="box-form">
+                                            <input type="text" name="box_number" value="{{ item.box_number or '' }}" class="form-control me-2" placeholder="Коробка">
+                                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                                            <button type="submit" class="btn btn-secondary btn-sm">Сохранить</button>
+                                        </form>
+                                    </td>
+                                    {% endif %}
+                                    {% if document.status != 'отгружен' %}
+                                    <td>
+                                        <form action="/document/{{ doc_id }}/delete_item" method="post" class="delete-form">
+                                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                        </form>
+                                    </td>
+                                    {% endif %}
+                                    {% if document.status == 'отгружен' %}
+                                    <td>{{ item.box_number or '' }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Боковая панель с информацией и действиями -->
+    <div class="col-lg-2">
+        <!-- Информация о документе -->
+        <div class="document-info card mb-4">
+            <h5>Документ {{ doc_id }}</h5>
+            <p><strong>Склад:</strong> {{ document.shipping_warehouse }}</p>
+            <p><strong>Кабинет:</strong> {{ document.shipping_office }}</p>
+            <p><strong>Статус:</strong> {{ document.status }}</p>
+        </div>
+
+        <!-- Форма обновления информации о документе -->
+        <div class="document-info-form card mb-4">
+            <form action="/document/{{ doc_id }}/update_info" method="post">
+                <div class="mb-3">
+                    <label for="shipping_office" class="form-label">Кабинет отгрузки:</label>
+                    <select name="shipping_office" id="shipping_office" class="form-select select2">
+                        {% if not document.shipping_office %}
+                            <option value="" selected>Выберите кабинет</option>
+                        {% endif %}
+                        {% for company in companies %}
+                            <option value="{{ company.legal_entity }}" {% if document.shipping_office == company.legal_entity %}selected{% endif %}>{{ company.legal_entity }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="shipping_warehouse" class="form-label">Склад отгрузки:</label>
+                    <select name="shipping_warehouse" id="shipping_warehouse" class="form-select select2">
+                        {% if not document.shipping_warehouse %}
+                            <option value="" selected>Выберите склад</option>
+                        {% endif %}
+                        {% for warehouse in warehouses %}
+                            <option value="{{ warehouse.name }}" {% if document.shipping_warehouse == warehouse.name %}selected{% endif %}>{{ warehouse.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+            </form>
+        </div>
+    
+    <!-- Кнопка сохранения документа -->
+    <div class="save-document-form card mb-4">
+        <form action="/save_document" method="post">
+            <input type="hidden" name="doc_id" value="{{ doc_id }}">
+            <input type="hidden" name="action" value="save_stay">
+            <button type="submit" class="btn btn-success w-100">Сохранить документ</button>
+        </form>
+    </div>
+
+
+    <div class="actions compact">
+        <form action="/document/{{ doc_id }}/change_status" method="post" class="action-form">
+            {% if document.status == 'в работе' %}
+                <input type="hidden" name="new_status" value="отгружен">
+                <button type="submit" class="btn btn-success">Отметить как отгружен</button>
+            {% else %}
+                <!-- Форма для ввода секретного кода при возврате в статус "в работе" -->
+                <div class="return-form d-flex align-items-center mt-3">
+                    <input type="hidden" name="new_status" value="в работе">
+                    <input type="password" name="secret_code" placeholder="Введите секретный код" required class="form-control me-2 secret-code-input">
+                    <button type="submit" class="btn btn-warning">Вернуть в работу</button>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+    
+        <!-- <div class="view-toggle">
+            {% if view_mode == 'grouped' %}
+                <a href="/document/{{ doc_id }}?view_mode=detailed" class="btn btn-primary">Детальный вид</a>
+            {% else %}
+                <a href="/document/{{ doc_id }}?view_mode=grouped" class="btn btn-primary">Сгруппированный вид</a>
+            {% endif %}
+        </div> -->
+    </div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block end_container %}
+    </div>
+{% endblock %}
+
+
+{% block additional_scripts %}
+    <script>
+        const doc_id = "{{ doc_id }}";
+    </script>
+    <script src="{{ url_for('static', path='scripts/document.js') }}"></script>
+{% endblock %}

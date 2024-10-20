@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', path='styles/index.css') }}">
+
+<!-- Основной контейнер -->
+<div class="container split-layout">
+    <div class="text-section">
+        <h1>Добро пожаловать!</h1>
+        <form action="/create_document" method="post" class="create-document-form">
+            <button type="submit" class="btn btn-primary">Создать новый документ</button>
+        </form>
+        <p><a href="/documents" class="link">Посмотреть все документы</a></p>
+    </div>
+    <div class="image-section">
+        <!-- Большое тематическое изображение -->
+        <div class="hero-image">
+            <img src="{{ url_for('static', path='images/pikaso_edit.jpeg') }}" alt="Складской учет" class="responsive-image">
+        </div>
+    </div>
+</div>
+{% endblock %}
